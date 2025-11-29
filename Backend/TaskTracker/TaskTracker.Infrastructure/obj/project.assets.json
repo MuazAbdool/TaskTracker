@@ -214,6 +214,16 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
+      },
+      "TaskTracker.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/TaskTracker.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TaskTracker.Domain.dll": {}
+        }
       }
     }
   },
@@ -584,11 +594,18 @@
         "microsoft.extensions.primitives.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "TaskTracker.Domain/1.0.0": {
+      "type": "project",
+      "path": "../TaskTracker.Domain/TaskTracker.Domain.csproj",
+      "msbuildProject": "../TaskTracker.Domain/TaskTracker.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Microsoft.EntityFrameworkCore.InMemory >= 8.0.22"
+      "Microsoft.EntityFrameworkCore >= 8.0.22",
+      "Microsoft.EntityFrameworkCore.InMemory >= 8.0.22",
+      "TaskTracker.Domain >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -615,7 +632,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Domain\\TaskTracker.Domain.csproj": {
+              "projectPath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Domain\\TaskTracker.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -634,6 +655,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[8.0.22, )"
+          },
           "Microsoft.EntityFrameworkCore.InMemory": {
             "target": "Package",
             "version": "[8.0.22, )"

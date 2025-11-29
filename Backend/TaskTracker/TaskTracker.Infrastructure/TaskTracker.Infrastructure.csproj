@@ -4,17 +4,16 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>TaskTracker.Infrustructure</RootNamespace>
+        <RootNamespace>TaskTracker.Infrastructure</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Extensions\" />
-      <Folder Include="Persistence\" />
-      <Folder Include="Repositories\" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.22" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.22" />
+      <ProjectReference Include="..\TaskTracker.Domain\TaskTracker.Domain.csproj" />
     </ItemGroup>
 
 </Project>
