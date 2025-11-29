@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "6Nr1H5hr1s0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Infrastructure\\TaskTracker.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\muaza\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.11\\microsoft.netcore.app.ref.8.0.11.nupkg.sha512",
+    "C:\\Users\\muaza\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.11\\microsoft.windowsdesktop.app.ref.8.0.11.nupkg.sha512",
+    "C:\\Users\\muaza\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.11\\microsoft.aspnetcore.app.ref.8.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}
