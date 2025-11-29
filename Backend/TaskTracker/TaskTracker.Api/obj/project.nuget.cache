@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "h02d4R8/JrM=",
+  "dgSpecHash": "VFVzd06j1Q4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Api\\TaskTracker.Api.csproj",
+  "projectFilePath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Api\\TaskTracker.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\muaza\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.22\\microsoft.aspnetcore.openapi.8.0.22.nupkg.sha512",
     "C:\\Users\\muaza\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",

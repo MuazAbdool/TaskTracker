@@ -9,7 +9,6 @@
 
     <ItemGroup>
       <Folder Include="DTOS\" />
-      <Folder Include="Entities\" />
       <Folder Include="Interfaces\Repositories\" />
     </ItemGroup>
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EDBCagKnsdg=",
+  "dgSpecHash": "nW/c8bPRcZA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Domain\\TaskTracker.Domain.csproj",
+  "projectFilePath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Domain\\TaskTracker.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\muaza\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.11\\microsoft.netcore.app.ref.8.0.11.nupkg.sha512",
     "C:\\Users\\muaza\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.11\\microsoft.windowsdesktop.app.ref.8.0.11.nupkg.sha512",

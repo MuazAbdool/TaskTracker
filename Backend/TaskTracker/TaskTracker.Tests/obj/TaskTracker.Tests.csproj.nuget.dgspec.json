@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj": {}
+    "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj": {
+    "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj",
+        "projectUniqueName": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj",
         "projectName": "TaskTracker.Tests",
-        "projectPath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj",
+        "projectPath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Tests\\TaskTracker.Tests.csproj",
         "packagesPath": "C:\\Users\\muaza\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Tests\\obj\\",
+        "outputPath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\muaza\\AppData\\Roaming\\NuGet\\NuGet.Config"

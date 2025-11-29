@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Application\\TaskTracker.Application.csproj",
+      "projectUniqueName": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Application\\TaskTracker.Application.csproj",
       "projectName": "TaskTracker.Application",
-      "projectPath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Application\\TaskTracker.Application.csproj",
+      "projectPath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Application\\TaskTracker.Application.csproj",
       "packagesPath": "C:\\Users\\muaza\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\muaza\\OneDrive - Redpanda Software\\Desktop\\FastTracker\\FastTracker\\Backend\\FastTracker\\TaskTracker.Application\\obj\\",
+      "outputPath": "C:\\TaskTracker\\Backend\\TaskTracker\\TaskTracker.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\muaza\\AppData\\Roaming\\NuGet\\NuGet.Config"
