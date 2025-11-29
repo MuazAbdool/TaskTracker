@@ -13,4 +13,8 @@
       <Folder Include="Repositories\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.22" />
+    </ItemGroup>
+
 </Project>
