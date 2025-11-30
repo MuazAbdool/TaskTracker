@@ -12,9 +12,9 @@ public class TaskRepository : ITaskRepository
     {
         _db = db;
     }
-    public Task<Task> GetByIdAsync(int id)
+    public async Task<Task> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+     return await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id);
     }
 
     public async Task<IEnumerable<Task>> GetAllAsync()
@@ -22,18 +22,30 @@ public class TaskRepository : ITaskRepository
        return await _db.Tasks.ToListAsync();
     }
 
-    public Task AddAsync(Task task)
+    public async Task<Task> AddAsync(Task task)
     {
-        throw new NotImplementedException();
+        await _db.Tasks.AddAsync(task);
+        await _db.SaveChangesAsync();
+        return task;
     }
 
-    public Task UpdateAsync(Task task)
+    public async Task<Task> UpdateAsync(Task task)
     {
-        throw new NotImplementedException();
+        _db.Tasks.Update(task);
+        await _db.SaveChangesAsync();
+        return task;
     }
 
-    public Task DeleteAsync(int id)
+    public async Task<Task> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var existing = await _db.Tasks.FindAsync(id);
+        if (existing != null)
+        {
+            _db.Tasks.Remove(existing);
+            await _db.SaveChangesAsync();
+            return existing;
+        }
+
+        return null;
     }
 }
