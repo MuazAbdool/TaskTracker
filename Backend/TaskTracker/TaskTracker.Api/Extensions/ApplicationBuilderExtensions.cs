@@ -1,4 +1,6 @@
 ﻿
+using TaskTracker.Api.Middleware;
+
 namespace TaskTracker.Api.Extensions;
 
 public static class ApplicationBuilderExtensions
@@ -17,6 +19,7 @@ public static class ApplicationBuilderExtensions
         app.UseRouting();
 
         app.UseCors(ServiceCollectionExtensions.MyCorsPolicy);
+        app.UseMiddleware<ExceptionMiddleware>();
         
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
