@@ -1,44 +1,42 @@
-var builder = WebApplication.CreateBuilder(args);
+using TaskTracker.Api.Extensions;
+using TaskTracker.Infrastructure.Extensions;
+using TaskTracker.Infrastructure.Persistence;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var builder = WebApplication.CreateBuilder(args);
 
-app.UseHttpsRedirection();
+    //
+    // builder.Host.UseSerilog((context, config) =>
+    // {
+    //     config.ReadFrom.Configuration(context.Configuration)
+    //         .Enrich.FromLogContext()
+    //         .WriteTo.Console();
+    // });
+    
+   
+    builder.Services.ConfigureServices(builder.Configuration);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
+    var app = builder.Build();
+    
+    using (var scope = app.Services.CreateScope())
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.SeedData();
+    }
 
-app.Run();
+    app.Configure(app.Environment);
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    //Log.Information("Host starting...");
+    await app.RunAsync();
+   // Log.Information("Host shutting down!");
+}
+catch (Exception exception)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Console.WriteLine(exception.Message);
+    //Log.Fatal(exception, "Error starting application! '{ErrorMessage}'", exception.Message);
+}
+finally
+{
+    //Log.CloseAndFlush();
 }

@@ -1,4 +1,4 @@
-﻿using TaskTracker.Infrustructure.Persistence;
+﻿using TaskTracker.Infrastructure.Persistence;
 using Tastracker.Domain.Entities;
 using Tastracker.Domain.Enums;
 using Task = Tastracker.Domain.Entities.Task;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Task = Tastracker.Domain.Entities.Task;
 
-namespace TaskTracker.Infrustructure.Persistence;
+namespace TaskTracker.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {
