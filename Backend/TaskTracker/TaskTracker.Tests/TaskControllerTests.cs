@@ -24,9 +24,9 @@ namespace TaskTracker.Tests
         public async Task GetAll_ReturnsSeededData_HappyPath()
         {
             // Arrange
-            var seededTasks = new List<Task>
+            var seededTasks = new List<TaskItem>
             {
-                new Task
+                new TaskItem()
                 {
                     Id = 1,
                     Title = "Initial Task 1",
@@ -40,11 +40,11 @@ namespace TaskTracker.Tests
             _taskRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(seededTasks);
 
             // Act
-            var result = await _controller.GetAll() as OkObjectResult;
+            var result = await _controller.GetAll("") as OkObjectResult;
 
             // Assert
             Assert.NotNull(result);
-            var tasks = result!.Value as IEnumerable<Task>;
+            var tasks = result!.Value as IEnumerable<TaskItem>;
             Assert.NotNull(tasks);
             Assert.AreEqual(1, tasks!.Count());
             Assert.AreEqual("Initial Task 1", tasks.First().Title);
@@ -54,7 +54,7 @@ namespace TaskTracker.Tests
         public async Task Create_InvalidTask_ReturnsBadRequestWithProblemDetails()
         {
             // Arrange: create a task with missing Title
-            var invalidTask = new Task
+            var invalidTask = new TaskItem
             {
                 Id = 2,
                 Title = "", // invalid

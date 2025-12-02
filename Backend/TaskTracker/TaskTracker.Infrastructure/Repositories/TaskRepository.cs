@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskTracker.Infrastructure.Persistence;
 using Tastracker.Domain.Interfaces.Repositories;
-using Task = Tastracker.Domain.Entities.Task;
+using TaskItem = Tastracker.Domain.Entities.Task;
 
 namespace TaskTracker.Infrastructure.Repositories;
 
@@ -12,31 +12,31 @@ public class TaskRepository : ITaskRepository
     {
         _db = db;
     }
-    public async Task<Task> GetByIdAsync(int id)
+    public async Task<TaskItem> GetByIdAsync(int id)
     {
      return await _db.Tasks.FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<IEnumerable<Task>> GetAllAsync()
+    public async Task<IEnumerable<TaskItem>> GetAllAsync()
     {
        return await _db.Tasks.ToListAsync();
     }
 
-    public async Task<Task> AddAsync(Task task)
+    public async Task<TaskItem> AddAsync(TaskItem task)
     {
         await _db.Tasks.AddAsync(task);
         await _db.SaveChangesAsync();
         return task;
     }
 
-    public async Task<Task> UpdateAsync(Task task)
+    public async Task<TaskItem> UpdateAsync(TaskItem task)
     {
         _db.Tasks.Update(task);
         await _db.SaveChangesAsync();
         return task;
     }
 
-    public async Task<Task> DeleteAsync(int id)
+    public async Task<TaskItem> DeleteAsync(int id)
     {
         var existing = await _db.Tasks.FindAsync(id);
         if (existing != null)
