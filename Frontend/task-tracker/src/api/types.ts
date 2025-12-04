@@ -12,6 +12,10 @@ export interface Task {
   createdAt: string;
 }
 
+export interface TaskListResponse {
+  tasks: Task[];
+  totalCount: number;
+}
 export interface ProblemDetails {
   type?: string;
   title?: string;
