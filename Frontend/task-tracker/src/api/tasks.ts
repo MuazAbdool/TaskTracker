@@ -1,10 +1,10 @@
 import { apiRequest } from "./apiRequest";
-import type { Task } from "./types";
+import type { Task, TaskListResponse } from "./types";
 
 
 export const TaskApi = {
   getAll: (q?: string, sort?: "dueDate:asc" | "dueDate:desc") =>
-    apiRequest<Task[]>({
+    apiRequest<TaskListResponse>({
       url: "/tasks",
       method: "GET",
       params: { q: q ?? "", sort },
