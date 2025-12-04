@@ -1,26 +1,15 @@
-import { useEffect, useState } from 'react'
-import { TaskApi } from './api/tasks'
-import type { ProblemDetails, Task } from './api/types'
-import './App.css'
-function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [error, setError] = useState<string | null>(null);
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import{ TaskListPage} from "./pages/TaskListPage";
+import {TaskFormPage} from "./pages/TaskFormPage";
 
-  useEffect(() => {
-    TaskApi.getAll()
-      .then(setTasks)
-      .catch((err: ProblemDetails) => setError(err.detail ?? "Unknown error"));
-  }, []);
-
-  if (error) return <div>Error: {error}</div>;
+export default function App() {
   return (
-    <ul>
-      {tasks.map((t) => (
-        <li key={t.id}>{t.title}</li>
-      ))}
-    </ul>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TaskListPage />} />
+        <Route path="/tasks/new" element={<TaskFormPage mode="create" />} />
+        <Route path="/tasks/:id/edit" element={<TaskFormPage mode="edit" />} />
+      </Routes>
+    </BrowserRouter>
   );
-  
 }
-
-export default App
