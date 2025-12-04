@@ -1,12 +1,12 @@
-﻿using Task = Tastracker.Domain.Entities.Task;
+﻿using TaskItem = Tastracker.Domain.Entities.Task;
 
 namespace Tastracker.Domain.Interfaces.Repositories;
 
 public interface ITaskRepository
 {
-    Task<Task>GetByIdAsync(int id);
-    Task<IEnumerable<Task>>GetAllAsync();
-    Task<Task> AddAsync(Task task);
-    Task<Task> UpdateAsync(Task task);
-    Task<Task> DeleteAsync(int id);
+    Task<TaskItem>GetByIdAsync(int id);
+    Task<IEnumerable<TaskItem>>GetAllAsync();
+    Task AddAsync(TaskItem task);
+    Task UpdateAsync(TaskItem task);
+    Task DeleteAsync(int id);
 }
