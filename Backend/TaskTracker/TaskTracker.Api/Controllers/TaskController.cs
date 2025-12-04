@@ -31,7 +31,11 @@ public class TasksController : ControllerBase
             "duedate:desc" => tasks.OrderByDescending(t => t.DueDate).ToList(),
             _ => tasks.OrderBy(t => t.DueDate).ToList()
         };
-        return Ok(tasks);
+        return Ok(new
+        {
+            tasks = tasks,
+            totalCount = tasks.Count()
+        });
     }
     
     [HttpGet("{id}")]
@@ -48,8 +52,8 @@ public class TasksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(Task task)
     {
-        var createdTask = await  _taskRepository.AddAsync(task);
-        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, createdTask);
+        await  _taskRepository.AddAsync(task);
+        return CreatedAtAction(nameof(GetById), new { id = task.Id },task);
         
     }
 
@@ -58,12 +62,8 @@ public class TasksController : ControllerBase
     {
         if (id != task.Id)
             return BadRequest();
-
-        var existing = await _taskRepository.GetByIdAsync(id);
-        if (existing == null)
-            return NotFound();
-
-        await _taskRepository.UpdateAsync(task);
+        
+        await  _taskRepository.UpdateAsync(task);
         return NoContent();
     }
 
