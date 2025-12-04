@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Task = Tastracker.Domain.Entities.Task;
+using TaskItem = Tastracker.Domain.Entities.Task;
 
 namespace TaskTracker.Infrastructure.Persistence;
 
@@ -10,18 +10,19 @@ public class AppDbContext : DbContext
     {
     }
 
- public DbSet<Task> Tasks => Set<Task>();
+ public DbSet<TaskItem> Tasks => Set<TaskItem>();
 
- public override int SaveChanges()
+ public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
  {
-     foreach (var entry in ChangeTracker.Entries<Task>())
+     foreach (var entry in ChangeTracker.Entries<TaskItem>())
      {
-         if(entry.State == EntityState.Added)
+         if (entry.State == EntityState.Added)
          {
              entry.Entity.CreatedAt = DateTime.UtcNow;
          }
      }
-        return base.SaveChanges();
+
+     return await base.SaveChangesAsync(cancellationToken);
  }
  
 }
