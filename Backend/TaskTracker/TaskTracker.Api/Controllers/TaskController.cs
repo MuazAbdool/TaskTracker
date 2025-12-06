@@ -44,7 +44,13 @@ public class TasksController : ControllerBase
         var task = await _taskRepository.GetByIdAsync(id);
         if (task == null)
         {
-            return NotFound();
+            return NotFound( new ProblemDetails()
+            {
+                Type = "https://example.com/probs/task-not-found",
+                Title = "Task not found",
+                Status = StatusCodes.Status404NotFound,
+                Detail = $"Task with ID {id} was not found."
+            });
         }
         return Ok(task);
     }
@@ -61,7 +67,13 @@ public class TasksController : ControllerBase
     public async Task<IActionResult> Update(int id, Task task)
     {
         if (id != task.Id)
-            return BadRequest();
+            return BadRequest(new ProblemDetails()
+            {
+                Type = "https://example.com/probs/bad-request",
+                Title = "Bad Request",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = "ID in the URL does not match ID in the body."
+            });
         
         await  _taskRepository.UpdateAsync(task);
         return NoContent();
@@ -73,8 +85,13 @@ public class TasksController : ControllerBase
         var existingTask = await _taskRepository.GetByIdAsync(id);
         if (existingTask == null)
         {
-            return NotFound();
-
+            return NotFound( new ProblemDetails()
+            {
+                Type = "https://example.com/probs/task-not-found",
+                Title = "Task not found",
+                Status = StatusCodes.Status404NotFound,
+                Detail = $"Task with ID {id} was not found."
+            });
         }
 
         await  _taskRepository.DeleteAsync(id);
