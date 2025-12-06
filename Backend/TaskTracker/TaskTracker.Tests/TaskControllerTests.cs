@@ -5,31 +5,40 @@ using TaskTracker.Api.Controllers;
 using TaskItem = Tastracker.Domain.Entities.Task;
 using Tastracker.Domain.Enums;
 using Tastracker.Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using System.Threading.Tasks;
+using Tastracker.Domain.DTOS;
 
 namespace TaskTracker.Tests
 {
-    public class TaskControllerTests
+    [TestFixture]
+    public class TasksControllerTests
     {
         private Mock<ITaskRepository> _taskRepoMock = null!;
         private TasksController _controller = null!;
 
-        [NUnit.Framework.SetUp]
+        [SetUp]
         public void Setup()
         {
             _taskRepoMock = new Mock<ITaskRepository>();
             _controller = new TasksController(_taskRepoMock.Object);
         }
 
+        #region GetAll Tests
         [Test]
-        public async Task GetAll_ReturnsSeededData_HappyPath()
+        public async Task GetAll_WhenCalled_ReturnsTasksWithTotalCount()
         {
             // Arrange
             var seededTasks = new List<TaskItem>
             {
-                new TaskItem()
+                new TaskItem
                 {
                     Id = 1,
-                    Title = "Initial Task 1",
+                    Title = "Initial Task",
                     Description = "Seeded task",
                     Status = Status.New,
                     Priority = Priority.Low,
@@ -37,45 +46,164 @@ namespace TaskTracker.Tests
                     CreatedAt = DateTime.UtcNow
                 }
             };
-            _taskRepoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(seededTasks);
+
+            _taskRepoMock
+                .Setup(r => r.GetAllAsync())
+                .ReturnsAsync(seededTasks);
 
             // Act
-            var result = await _controller.GetAll("") as OkObjectResult;
+            var actionResult = await _controller.GetAll("");
+
+            // Assert
+            var ok = actionResult as OkObjectResult;
+            Assert.NotNull(ok);
+
+            // Assert
+            var dto = ok!.Value as TaskListDto;
+            Assert.NotNull(dto);
+
+            // Assert: Task list and count
+            Assert.AreEqual(1, dto!.TotalCount);
+            Assert.AreEqual(1, dto.Tasks.Count());
+            Assert.AreEqual("Initial Task", dto.Tasks.First().Title);
+        }
+        #endregion
+
+        #region GetById Tests
+        [Test]
+        public async Task GetById_TaskExists_ReturnsOk()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 1, Title = "Test Task" };
+            _taskRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(task);
+
+            // Act
+            var result = await _controller.GetById(1) as OkObjectResult;
 
             // Assert
             Assert.NotNull(result);
-            var tasks = result!.Value as IEnumerable<TaskItem>;
-            Assert.NotNull(tasks);
-            Assert.AreEqual(1, tasks!.Count());
-            Assert.AreEqual("Initial Task 1", tasks.First().Title);
+            var returnedTask = result!.Value as TaskItem;
+            Assert.NotNull(returnedTask);
+            Assert.AreEqual(1, returnedTask!.Id);
         }
 
         [Test]
-        public async Task Create_InvalidTask_ReturnsBadRequestWithProblemDetails()
+        public async Task GetById_TaskNotFound_ReturnsProblemDetails()
         {
-            // Arrange: create a task with missing Title
-            var invalidTask = new TaskItem
-            {
-                Id = 2,
-                Title = "", // invalid
-                Description = "No title",
-                Status = Status.New,
-                Priority = Priority.Low,
-                DueDate = DateTime.UtcNow.AddDays(1),
-                CreatedAt = DateTime.UtcNow
-            };
+            // Arrange
+            _taskRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((TaskItem?)null);
 
+            // Act
+            var result = await _controller.GetById(123) as NotFoundObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            var problem = result!.Value as ProblemDetails;
+            Assert.NotNull(problem);
+            Assert.AreEqual(404, problem!.Status);
+            Assert.AreEqual("Task not found", problem.Title);
+        }
+        #endregion
+
+        #region Create Tests
+        [Test]
+        public async Task Create_ValidTask_ReturnsCreatedAtAction()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 1, Title = "New Task" };
+
+            _taskRepoMock.Setup(r => r.AddAsync(task)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.Create(task) as CreatedAtActionResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.AreEqual(nameof(_controller.GetById), result!.ActionName);
+            Assert.AreEqual(task.Id, ((TaskItem)result.Value!).Id);
+        }
+
+        [Test]
+        public async Task Create_InvalidTask_ReturnsValidationProblem()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 2, Title = "" }; // invalid
             _controller.ModelState.AddModelError("Title", "The Title field is required.");
 
             // Act
-            var result = await _controller.Create(invalidTask) as BadRequestObjectResult;
+            var result = await _controller.Create(task) as BadRequestObjectResult;
 
             // Assert
             Assert.NotNull(result);
             var problem = result!.Value as ValidationProblemDetails;
             Assert.NotNull(problem);
-            Assert.That(problem!.Errors.ContainsKey("Title"));
-            Assert.That(problem.Errors["Title"][0], Is.EqualTo("The Title field is required."));
+            Assert.IsTrue(problem.Errors.ContainsKey("Title"));
+            Assert.AreEqual("The Title field is required.", problem.Errors["Title"][0]);
         }
+        #endregion
+
+        #region Update Tests
+        [Test]
+        public async Task Update_IdMismatch_ReturnsBadRequestProblemDetails()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 1, Title = "Task" };
+
+            // Act
+            var result = await _controller.Update(2, task) as BadRequestObjectResult;
+
+            // Assert
+            var problem = result!.Value as ProblemDetails;
+            Assert.NotNull(problem);
+            Assert.AreEqual(400, problem!.Status);
+        }
+
+        [Test]
+        public async Task Update_ValidTask_ReturnsNoContent()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 1, Title = "Task" };
+            _taskRepoMock.Setup(r => r.UpdateAsync(task)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.Update(1, task) as NoContentResult;
+
+            // Assert
+            Assert.NotNull(result);
+        }
+        #endregion
+
+        #region Delete Tests
+        [Test]
+        public async Task Delete_TaskExists_ReturnsNoContent()
+        {
+            // Arrange
+            var task = new TaskItem { Id = 1, Title = "Task" };
+            _taskRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(task);
+            _taskRepoMock.Setup(r => r.DeleteAsync(1)).Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.Delete(1) as NoContentResult;
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Test]
+        public async Task Delete_TaskNotFound_ReturnsProblemDetails()
+        {
+            // Arrange
+            _taskRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((TaskItem?)null);
+
+            // Act
+            var result = await _controller.Delete(123) as NotFoundObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            var problem = result!.Value as ProblemDetails;
+            Assert.NotNull(problem);
+            Assert.AreEqual(404, problem!.Status);
+        }
+        #endregion
     }
 }

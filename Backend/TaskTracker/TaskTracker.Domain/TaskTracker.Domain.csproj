@@ -7,8 +7,4 @@
         <RootNamespace>Tastracker.Domain</RootNamespace>
     </PropertyGroup>
 
-    <ItemGroup>
-      <Folder Include="DTOS\" />
-    </ItemGroup>
-
 </Project>

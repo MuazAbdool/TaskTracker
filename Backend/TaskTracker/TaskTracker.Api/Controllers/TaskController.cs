@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Tastracker.Domain.DTOS;
 using Tastracker.Domain.Interfaces.Repositories;
 using Task = Tastracker.Domain.Entities.Task;
 
@@ -31,11 +32,12 @@ public class TasksController : ControllerBase
             "duedate:desc" => tasks.OrderByDescending(t => t.DueDate).ToList(),
             _ => tasks.OrderBy(t => t.DueDate).ToList()
         };
-        return Ok(new
+        var taskListDto = new TaskListDto
         {
-            tasks = tasks,
-            totalCount = tasks.Count()
-        });
+            Tasks = tasks,
+            TotalCount = tasks.Count()
+        };
+        return Ok(taskListDto);
     }
     
     [HttpGet("{id}")]
@@ -57,7 +59,11 @@ public class TasksController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Create(Task task)
-    {
+    {  
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(new ValidationProblemDetails(ModelState));
+        }
         await  _taskRepository.AddAsync(task);
         return CreatedAtAction(nameof(GetById), new { id = task.Id },task);
         
