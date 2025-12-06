@@ -1,11 +1,20 @@
 
-export type TaskStatus = "New" | "InProgress" | "Done";
-export type TaskPriority = "Low" | "Medium" | "High";
+export enum TaskStatus {
+  New = "New",
+  InProgress = "InProgress",
+  Done = "Done",
+}
+
+export enum TaskPriority {
+  Low = "Low",
+  Medium = "Medium",
+  High = "High",
+}
 
 export interface Task {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   status: TaskStatus;
   priority: TaskPriority;
   dueDate: string | null;

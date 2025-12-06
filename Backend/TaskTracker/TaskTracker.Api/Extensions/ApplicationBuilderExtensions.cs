@@ -20,6 +20,7 @@ public static class ApplicationBuilderExtensions
 
         app.UseCors(ServiceCollectionExtensions.MyCorsPolicy);
         app.UseMiddleware<ExceptionMiddleware>();
+        app.UseMiddleware<RequestLoggingMiddleware>();
         
 
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
