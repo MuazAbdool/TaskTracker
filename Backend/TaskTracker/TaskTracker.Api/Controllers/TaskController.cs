@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FastTracker.Application.Tasks.Commands;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Tastracker.Domain.DTOS;
 using Tastracker.Domain.Interfaces.Repositories;
 using Task = Tastracker.Domain.Entities.Task;
@@ -9,9 +11,11 @@ namespace TaskTracker.Api.Controllers;
 public class TasksController : ControllerBase
 {  
     private readonly ITaskRepository _taskRepository;
-    public TasksController(ITaskRepository taskRepository)
+    private readonly IMediator _mediator;
+    public TasksController(ITaskRepository taskRepository , IMediator mediator)
     {
         _taskRepository = taskRepository;
+        _mediator = mediator;
     }
     [HttpGet]
     public async Task<IActionResult> GetAll( [FromQuery] string? q,[FromQuery] string sort = "dueDate:asc" )
@@ -88,19 +92,20 @@ public class TasksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var existingTask = await _taskRepository.GetByIdAsync(id);
-        if (existingTask == null)
+        try
         {
-            return NotFound( new ProblemDetails()
+            var deletedId = await _mediator.Send(new DeleteTaskCommand(id));
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new ProblemDetails
             {
                 Type = "https://example.com/probs/task-not-found",
                 Title = "Task not found",
                 Status = StatusCodes.Status404NotFound,
-                Detail = $"Task with ID {id} was not found."
+                Detail = ex.Message
             });
         }
-
-        await  _taskRepository.DeleteAsync(id);
-        return NoContent();
     }
 }

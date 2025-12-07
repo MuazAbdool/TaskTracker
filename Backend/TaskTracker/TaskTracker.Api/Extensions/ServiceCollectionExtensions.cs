@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using FastTracker.Application.Tasks.Commands;
 using TaskTracker.Infrustructure.Extensions;
 
 namespace TaskTracker.Api.Extensions;
@@ -26,6 +27,10 @@ public static class ServiceCollectionExtensions
             options.AddPolicy(name: MyCorsPolicy,
                 builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
         });
+        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<DeleteTaskCommandHandler>());
+
+
         return services;
     }
 }

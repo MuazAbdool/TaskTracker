@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using Tastracker.Domain.DTOS;
 
 namespace TaskTracker.Tests
@@ -20,12 +21,15 @@ namespace TaskTracker.Tests
     {
         private Mock<ITaskRepository> _taskRepoMock = null!;
         private TasksController _controller = null!;
+        private Mock<IMediator> _mediatorMock = null!;
 
         [SetUp]
         public void Setup()
         {
             _taskRepoMock = new Mock<ITaskRepository>();
-            _controller = new TasksController(_taskRepoMock.Object);
+            _mediatorMock = new Mock<IMediator>();
+            _controller = new TasksController(_taskRepoMock.Object, _mediatorMock.Object);
+          
         }
 
         #region GetAll Tests

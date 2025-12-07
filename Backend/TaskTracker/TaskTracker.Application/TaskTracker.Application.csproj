@@ -10,6 +10,15 @@
     <ItemGroup>
       <Folder Include="Extensions\" />
       <Folder Include="Services\" />
+      <Folder Include="Tasks\Queries\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="14.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TaskTracker.Domain\TaskTracker.Domain.csproj" />
     </ItemGroup>
 
 </Project>
