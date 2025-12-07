@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Tastracker.Domain.Interfaces.Repositories;
 
-namespace FastTracker.Application.Tasks.Commands;
+namespace TaskTracker.Application.Tasks.Commands;
 
 public class DeleteTaskCommand : IRequest<int>
 {

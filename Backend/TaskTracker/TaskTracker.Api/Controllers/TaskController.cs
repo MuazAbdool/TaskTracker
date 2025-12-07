@@ -1,6 +1,6 @@
-﻿using FastTracker.Application.Tasks.Commands;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TaskTracker.Application.Tasks.Commands;
 using Tastracker.Domain.DTOS;
 using Tastracker.Domain.Interfaces.Repositories;
 using Task = Tastracker.Domain.Entities.Task;

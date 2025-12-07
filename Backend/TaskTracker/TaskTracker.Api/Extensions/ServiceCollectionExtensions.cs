@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using FastTracker.Application.Tasks.Commands;
+using TaskTracker.Application.Tasks.Commands;
 using TaskTracker.Infrustructure.Extensions;
 
 namespace TaskTracker.Api.Extensions;

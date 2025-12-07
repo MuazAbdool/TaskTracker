@@ -5,12 +5,6 @@ using TaskTracker.Api.Controllers;
 using TaskItem = Tastracker.Domain.Entities.Task;
 using Tastracker.Domain.Enums;
 using Tastracker.Domain.Interfaces.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Threading.Tasks;
 using MediatR;
 using Tastracker.Domain.DTOS;
 
@@ -182,32 +176,41 @@ namespace TaskTracker.Tests
         public async Task Delete_TaskExists_ReturnsNoContent()
         {
             // Arrange
-            var task = new TaskItem { Id = 1, Title = "Task" };
-            _taskRepoMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(task);
-            _taskRepoMock.Setup(r => r.DeleteAsync(1)).Returns(Task.CompletedTask);
+            int taskId = 1;
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<DeleteTaskCommand>(c => c.Id == taskId), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(taskId);
 
             // Act
-            var result = await _controller.Delete(1) as NoContentResult;
+            var result = await _controller.Delete(taskId);
 
             // Assert
-            Assert.NotNull(result);
+            Assert.IsInstanceOf<NoContentResult>(result);
         }
 
         [Test]
         public async Task Delete_TaskNotFound_ReturnsProblemDetails()
         {
             // Arrange
-            _taskRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<int>())).ReturnsAsync((TaskItem?)null);
+            int taskId = 123;
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<DeleteTaskCommand>(c => c.Id == taskId), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new KeyNotFoundException($"Task with ID {taskId} not found."));
 
             // Act
-            var result = await _controller.Delete(123) as NotFoundObjectResult;
+            var result = await _controller.Delete(taskId);
 
             // Assert
-            Assert.NotNull(result);
-            var problem = result!.Value as ProblemDetails;
+            var notFoundResult = result as NotFoundObjectResult;
+            Assert.NotNull(notFoundResult);
+
+            var problem = notFoundResult!.Value as ProblemDetails;
             Assert.NotNull(problem);
+
             Assert.AreEqual(404, problem!.Status);
+            Assert.AreEqual("Task not found", problem.Title);
         }
+
         #endregion
     }
 }
