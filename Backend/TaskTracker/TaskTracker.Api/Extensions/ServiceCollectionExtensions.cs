@@ -1,4 +1,5 @@
-﻿using TaskTracker.Infrustructure.Extensions;
+﻿using System.Text.Json.Serialization;
+using TaskTracker.Infrustructure.Extensions;
 
 namespace TaskTracker.Api.Extensions;
 
@@ -10,7 +11,10 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration config)
     {
-        services.AddControllers();
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
         services.AddEndpointsApiExplorer();
         services.AddSwaggerSupport();
         //services.AddHttpClient();

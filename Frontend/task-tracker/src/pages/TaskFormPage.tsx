@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TaskApi } from "../api/tasks";
-import type { Task } from "../api/types";
-
+import { TaskPriority, TaskStatus } from "../api/types";
+import {extractApiError} from "../utils/extractApiError";
 export function TaskFormPage({ mode }: { mode: "create" | "edit" }) {
   const navigate = useNavigate();
   const { id } = useParams();
 
   // form fields
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [status, setStatus] = useState(0);
-  const [priority, setPriority] = useState(0);
+  const [description, setDescription] = useState<string | undefined>("");
+  const [status, setStatus] = useState<TaskStatus>(TaskStatus.New);
+  const [priority, setPriority] = useState<TaskPriority>(TaskPriority.Low);
   const [dueDate, setDueDate] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export function TaskFormPage({ mode }: { mode: "create" | "edit" }) {
           : null;
           setDueDate(formatted);
         })
-        .catch(() => setError("Task not found"))
+        .catch((err) => setError(extractApiError(err)))
         .finally(() => setLoading(false));
     }
   }, [mode, id]);
@@ -63,14 +63,31 @@ export function TaskFormPage({ mode }: { mode: "create" | "edit" }) {
       }
 
       navigate("/");
-    } catch (err) {
-      setError("Failed to save task");
+    } catch (err: any) {
+      setError(extractApiError(err));
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <p className="p-6">Loading...</p>;
+ if (loading) {
+  return <p className="p-6">Loading...</p>;
+}
+
+if (mode === "edit" && error) {
+  return (
+    <div className="p-6 text-center max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold text-red-600 mb-2">Error</h1>
+      <p className="text-gray-700 mb-4">{error}</p>
+      <button
+        onClick={() => navigate("/")}
+        className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700"
+      >
+        Back to List
+      </button>
+    </div>
+  );
+}
 
 return (
   <form
@@ -110,11 +127,11 @@ return (
       <select
         className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
         value={status}
-        onChange={(e) => setStatus(Number(e.target.value))}
+        onChange={(e) => setStatus(e.target.value as TaskStatus)}
       >
-        <option value={0}>Pending</option>
-        <option value={1}>In Progress</option>
-        <option value={2}>Completed</option>
+        <option value={TaskStatus.New}>New</option>
+        <option value={TaskStatus.InProgress}>In Progress</option>
+        <option value={TaskStatus.Done}>Completed</option>
       </select>
     </div>
 
@@ -124,11 +141,11 @@ return (
       <select
         className="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
         value={priority}
-        onChange={(e) => setPriority(Number(e.target.value))}
+        onChange={(e) => setPriority(e.target.value as TaskPriority)}
       >
-        <option value={0}>Low</option>
-        <option value={1}>Medium</option>
-        <option value={2}>High</option>
+        <option value={TaskPriority.Low}>Low</option>
+        <option value={TaskPriority.Medium}>Medium</option>
+        <option value={TaskPriority.High}>High</option>
       </select>
     </div>
 

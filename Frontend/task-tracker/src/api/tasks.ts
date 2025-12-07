@@ -23,7 +23,7 @@ export const TaskApi = {
       data: task,
     }),
 
-  update: (id: number, task: Partial<Omit<Task, "id" | "createdAt">>) =>
+  update: (id: number, task: Partial<Omit<Task, "createdAt">>) =>
     apiRequest<Task>({
       url: `/tasks/${id}`,
       method: "PUT",
