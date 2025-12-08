@@ -62,15 +62,13 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Task task)
-    {  
+    public async Task<IActionResult> Create([FromBody] CreateTaskCommand command)
+    {
         if (!ModelState.IsValid)
-        {
             return BadRequest(new ValidationProblemDetails(ModelState));
-        }
-        await  _taskRepository.AddAsync(task);
-        return CreatedAtAction(nameof(GetById), new { id = task.Id },task);
-        
+
+        var createdTask = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, createdTask);
     }
 
     [HttpPut("{id}")]

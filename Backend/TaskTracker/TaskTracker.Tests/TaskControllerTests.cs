@@ -6,6 +6,7 @@ using TaskItem = Tastracker.Domain.Entities.Task;
 using Tastracker.Domain.Enums;
 using Tastracker.Domain.Interfaces.Repositories;
 using MediatR;
+using TaskTracker.Application.Tasks.Commands;
 using Tastracker.Domain.DTOS;
 
 namespace TaskTracker.Tests
@@ -108,17 +109,19 @@ namespace TaskTracker.Tests
         public async Task Create_ValidTask_ReturnsCreatedAtAction()
         {
             // Arrange
-            var task = new TaskItem { Id = 1, Title = "New Task" };
+            var taskDto = new TaskDto { Id = 1, Title = "New Task", Status = Status.New, Priority = Priority.Low };
 
-            _taskRepoMock.Setup(r => r.AddAsync(task)).Returns(Task.CompletedTask);
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<CreateTaskCommand>(), default))
+                .ReturnsAsync(taskDto);
 
             // Act
-            var result = await _controller.Create(task) as CreatedAtActionResult;
+            var result = await _controller.Create(new CreateTaskCommand()) as CreatedAtActionResult;
 
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(nameof(_controller.GetById), result!.ActionName);
-            Assert.AreEqual(task.Id, ((TaskItem)result.Value!).Id);
+            Assert.AreEqual(taskDto.Id, ((TaskItem)result.Value!).Id);
         }
 
         [Test]
@@ -129,7 +132,7 @@ namespace TaskTracker.Tests
             _controller.ModelState.AddModelError("Title", "The Title field is required.");
 
             // Act
-            var result = await _controller.Create(task) as BadRequestObjectResult;
+            var result = await _controller.Create(new CreateTaskCommand())  as BadRequestObjectResult;
 
             // Assert
             Assert.NotNull(result);
