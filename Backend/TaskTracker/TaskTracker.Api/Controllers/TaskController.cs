@@ -68,7 +68,7 @@ public class TasksController : ControllerBase
             return BadRequest(new ValidationProblemDetails(ModelState));
 
         var createdTask = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, createdTask);
+        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, new TaskDto(createdTask){});
     }
 
     [HttpPut("{id}")]

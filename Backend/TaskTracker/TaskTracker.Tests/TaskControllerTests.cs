@@ -117,11 +117,12 @@ namespace TaskTracker.Tests
 
             // Act
             var result = await _controller.Create(new CreateTaskCommand()) as CreatedAtActionResult;
+            var returnedDto = result.Value as TaskDto;
 
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(nameof(_controller.GetById), result!.ActionName);
-            Assert.AreEqual(taskDto.Id, ((TaskItem)result.Value!).Id);
+            Assert.AreEqual(taskDto.Id, returnedDto!.Id);
         }
 
         [Test]
