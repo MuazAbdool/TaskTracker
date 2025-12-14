@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TaskTracker.Application.Tasks.Commands;
+using TaskTracker.Application.Tasks.Queries;
 using Tastracker.Domain.DTOS;
 using Tastracker.Domain.Interfaces.Repositories;
 using Task = Tastracker.Domain.Entities.Task;
@@ -10,47 +11,28 @@ namespace TaskTracker.Api.Controllers;
 [Route("api/[controller]")]
 public class TasksController : ControllerBase
 {  
-    private readonly ITaskRepository _taskRepository;
     private readonly IMediator _mediator;
-    public TasksController(ITaskRepository taskRepository , IMediator mediator)
+    public TasksController( IMediator mediator)
     {
-        _taskRepository = taskRepository;
+       
         _mediator = mediator;
     }
     [HttpGet]
-    public async Task<IActionResult> GetAll( [FromQuery] string? q,[FromQuery] string sort = "dueDate:asc" )
+    public async Task<IActionResult> GetAll( [FromQuery] string ? q ,  [FromQuery] string? sort = "dueDate:asc")
     {
-        var tasks = await _taskRepository.GetAllAsync();
-        if (!string.IsNullOrWhiteSpace(q))
-        {
-            tasks = tasks
-                .Where(t => t.Title.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                            (t.Description != null && t.Description.Contains(q, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-            
-            
-        }
-        
-        tasks = sort.ToLower() switch
-        {
-            "duedate:desc" => tasks.OrderByDescending(t => t.DueDate).ToList(),
-            _ => tasks.OrderBy(t => t.DueDate).ToList()
-        };
-        var taskListDto = new TaskListDto
-        {
-            Tasks = tasks,
-            TotalCount = tasks.Count()
-        };
+        var request = new GetTasksQuery(q, sort ?? "dueDate:asc");
+        var taskListDto = await _mediator.Send(request);
         return Ok(taskListDto);
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var task = await _taskRepository.GetByIdAsync(id);
+        var task = await _mediator.Send(new GetTaskByIdQuery(id));
+
         if (task == null)
         {
-            return NotFound( new ProblemDetails()
+            return NotFound(new ProblemDetails
             {
                 Type = "https://example.com/probs/task-not-found",
                 Title = "Task not found",
@@ -58,6 +40,7 @@ public class TasksController : ControllerBase
                 Detail = $"Task with ID {id} was not found."
             });
         }
+
         return Ok(task);
     }
 
@@ -68,13 +51,14 @@ public class TasksController : ControllerBase
             return BadRequest(new ValidationProblemDetails(ModelState));
 
         var createdTask = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, new TaskDto(createdTask){});
+        return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, new TaskDto(createdTask));
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Task task)
-    {
-        if (id != task.Id)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateTaskCommand updateTaskCommand)
+    { 
+        if(id != updateTaskCommand.Id)
+        {
             return BadRequest(new ProblemDetails()
             {
                 Type = "https://example.com/probs/bad-request",
@@ -82,9 +66,22 @@ public class TasksController : ControllerBase
                 Status = StatusCodes.Status400BadRequest,
                 Detail = "ID in the URL does not match ID in the body."
             });
-        
-        await  _taskRepository.UpdateAsync(task);
-        return NoContent();
+        }
+        try
+        {
+            await _mediator.Send(updateTaskCommand);
+            return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Type = "https://example.com/probs/task-not-found",
+                Title = "Task not found",
+                Status = StatusCodes.Status404NotFound,
+                Detail = ex.Message
+            });
+        }
     }
 
     [HttpDelete("{id}")]
