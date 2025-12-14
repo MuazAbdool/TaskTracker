@@ -9,7 +9,7 @@ public class Task
     [Required(ErrorMessage = "Title is required")]
     [MinLength(1, ErrorMessage = "Title cannot be empty")]
     public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string?  Description { get; set; } = string.Empty;
     [Required(ErrorMessage = "Status is required")]
     [EnumDataType(typeof(Status), ErrorMessage = "Status must be New, InProgress, or Done")]
     public Status Status { get; set;  }
