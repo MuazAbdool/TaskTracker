@@ -44,4 +44,6 @@ public class TaskRepository : ITaskRepository
            
         }
     }
+    public IQueryable<TaskItem> Query() => _db.Tasks.AsQueryable();
+
 }
