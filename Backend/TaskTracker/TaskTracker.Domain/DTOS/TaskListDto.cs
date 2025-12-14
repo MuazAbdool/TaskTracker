@@ -3,6 +3,6 @@ using TaskItem = Tastracker.Domain.Entities.Task;
 using System.Collections.Generic;
 public class TaskListDto
 {
-    public IEnumerable<TaskItem> Tasks { get; set; } = new List<TaskItem>();
+    public IEnumerable<TaskDto> Tasks { get; set; } = new List<TaskDto>();
     public int TotalCount { get; set; }
 }
