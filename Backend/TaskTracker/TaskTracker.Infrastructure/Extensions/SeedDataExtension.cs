@@ -30,17 +30,27 @@ public static class SeedDataExtensions
                 Description = "Another seeded entry",
                 Status = Status.InProgress,
                 Priority = Priority.Medium,
-                DueDate = null,
+                DueDate =  DateTime.UtcNow.AddDays(2),
                 CreatedAt = DateTime.UtcNow
             }, 
             new Task
             {
                 Id = 3,
-                Title = "Initial Task 2",
+                Title = "Initial Task 3",
                 Description = "Another seeded entry",
                 Status = Status.Done,
                 Priority = Priority.High,
-                DueDate = null,
+                DueDate =  DateTime.UtcNow.AddDays(10),
+                CreatedAt = DateTime.UtcNow
+            }, 
+            new Task
+            {
+                Id = 4,
+                Title = "Initial Task 4",
+                Description = "Another seeded entry",
+                Status = Status.Done,
+                Priority = Priority.High,
+                DueDate =  DateTime.UtcNow,
                 CreatedAt = DateTime.UtcNow
             }
         );
