@@ -57,9 +57,9 @@ cd Backend/TaskTracker/TaskTracker.Api
 dotnet restore
 dotnet run
 ```
-API runs at: https://localhost:5005
+API runs at: http://localhost:5005
 
-Swagger UI: https://localhost:5005/swagger
+Swagger UI: http://localhost:5005/swagger
 
 ### Front end 
 ```
